@@ -23,8 +23,17 @@ class RulesObject:
         with open(filename, 'r') as infile:
             data = json.loads(infile.read())
         data[key] = new_data
-        with open(OBJECT_FILE, 'w') as outfile:
-            outfile.write(json.dumps(data))
+        with open(filename, 'w') as outfile:
+            outfile.write(json.dumps(data, indent=4))
+
+class RulesInstance(RulesObject):
+    def __init__(self, obj):
+        self.raw_data = obj
+
+    def save_rule(self):
+        key = list(self.raw_data.keys())[0]
+        self.to_json_dict(
+            RULES_FILE, self.raw_data[key], key)
 
 class ObjectPrototype(RulesObject):
     def __init__(self, obj):
@@ -83,31 +92,3 @@ class ObjectInstance(ObjectPrototype):
         data.append(out_data)
         with open(DATA_FILE, 'w') as outfile:
             outfile.write(json.dumps(data))
-
-def run():
-    # Hypothetical web form data to create a new object prototype.
-    OBJECT_DATA = {
-        'type': 'service_history',
-        'attributes': [ # Base attributes, does not include calc'd attributes.
-            'start_date',
-            'end_date',
-            'ret_type',
-        ],
-        'rules': ['ret_type_name'] # Rule sets that are available to this obj.
-    }
-    # Hypothetical web form data to create instance from existing obj prototype.
-    INSTANCE_DATA = {
-        'type': 'service_history',
-        'start_date': '2014-12-01',
-        'end_date': '2015-01-01',
-        'ret_type': '1'
-    }
-    ServiceHistory = ObjectPrototype(OBJECT_DATA) # Create prototype custom obj.
-    ServiceHistory.save_prototype() # Save prototype to objects.json.
-    TestInstance = ObjectInstance(INSTANCE_DATA) # Create new object instance.
-    TestInstance.populate_instance() # Populate with supplied data.
-    TestInstance.calculate_instance() # Calculate fields based on rules.
-    TestInstance.save_record() # Save record to data.json.
-    return TestInstance.__dict__
-
-print(run())
