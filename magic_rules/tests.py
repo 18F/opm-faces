@@ -1,3 +1,6 @@
+from settings import *
+from engine import *
+
 def test_setup():
     # Hypothetical web form data to create a new object prototype.
     OBJECT_DATA = {
