@@ -91,4 +91,4 @@ class ObjectInstance(ObjectPrototype):
         out_data['type'] = self.type
         data.append(out_data)
         with open(DATA_FILE, 'w') as outfile:
-            outfile.write(json.dumps(data))
+            outfile.write(json.dumps(data, indent=4))

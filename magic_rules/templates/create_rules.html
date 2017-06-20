@@ -1,15 +1,61 @@
-<form method="post" action="/rules/_incoming" enctype="multipart/form-data">
-  <table>
-    <tr><td>Apply to:</td><td><select name="object">
-    {% for obj in objects %}
-    <option> {{obj}}
-    {% endfor %}
-  </select></td><tr>
-  <tr><td>Rule name:</td><td><input name="name"></td></tr>
-  <tr><td>Compare value:</td><td><input name="compare_value"></td></tr>
-  <tr><td>Compare attribute:</td><td><input name="attribute"></td></tr>
-  <tr><td>Operator:</td><td><input name="operator"></td></tr>
-  <tr><td>If TRUE:</td><td><input name="concur"></td></tr>
-  <tr><td>If FALSE:</td><td><input name="not_concur"></td></tr>
-  <tr><td><button value="upload" type="submit">Submit</button></td></tr>
-</form>
+<head>
+  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+</head>
+<div class="usa-grid" style="margin-top: 5%">
+  <h2>
+    Rule magic!
+  </h2>
+  <hr>
+  <h3>
+    Create rules
+  </h3>
+  <div class="usa-width-one-half">
+    <form method="post" action="/rules/_incoming" enctype="multipart/form-data">
+      <table class="usa-table-borderless">
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Apply to:</td>
+            <td>
+              <select name="object">
+              {% for obj in objects %}
+                <option> {{obj}}
+              {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Rule name:</td>
+            <td><input name="name"></td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Compare value:</td>
+            <td><input name="compare_value"></td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Compare attribute:</td>
+            <td><input name="attribute"></td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Operator:</td>
+            <td><input name="operator"></td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>If TRUE:</td>
+            <td><input name="concur"></td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>If FALSE:</td>
+            <td><input name="not_concur"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">
+              <button value="submit" type="submit">Submit</button>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<head>
+  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+</head>
+<div class="usa-grid" style="margin-top: 5%">
+  <h2>
+    Rule magic!
+  </h2>
+  <hr>
+  <h3>
+      Create object prototype
+  </h3>
+  <div class="usa-width-one-half">
+    <form method="post" action="/prototypes/_incoming" enctype="multipart/form-data">
+      <table class="usa-table-borderless">
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Name:</th>
+            <td><input name="name"></td>
+          </tr>
+          {% for num in range(5) %}
+            <tr>
+              <th scope="row"><strong>Attribute:</th>
+              <td><input name="attribute_{{num}}"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">
+              <button value="submit" type="submit">Submit</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<head>
+  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+</head>
+<div class="usa-grid" style="margin-top: 5%">
+  <h2>
+    Rule magic!
+  </h2>
+  <hr>
+  <h3>
+    View data
+  </h3>
+  <div class="usa-width-one-half">
+    <a href='/'>Back to steps</a>
+    {% for record in data %}
+      <table class="usa-table-borderless">
+        <thead>
+          <tr><th colspan="2">record_{{data.index(record)}} ({{record.type}})</th></tr>
+        </thead>
+        <tbody>
+          {% for attribute in record %}
+            {% if attribute not in ['rules', 'type'] %}
+              <tr><td>{{ attribute }}</td><td>{{ record[attribute] }}</td></tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  </div>
+</div>
