@@ -1,0 +1,15 @@
+<form method="post" action="/rules/_incoming" enctype="multipart/form-data">
+  <table>
+    <tr><td>Apply to:</td><td><select name="object">
+    {% for obj in objects %}
+    <option> {{obj}}
+    {% endfor %}
+  </select></td><tr>
+  <tr><td>Rule name:</td><td><input name="name"></td></tr>
+  <tr><td>Compare value:</td><td><input name="compare_value"></td></tr>
+  <tr><td>Compare attribute:</td><td><input name="attribute"></td></tr>
+  <tr><td>Operator:</td><td><input name="operator"></td></tr>
+  <tr><td>If TRUE:</td><td><input name="concur"></td></tr>
+  <tr><td>If FALSE:</td><td><input name="not_concur"></td></tr>
+  <tr><td><button value="upload" type="submit">Submit</button></td></tr>
+</form>
