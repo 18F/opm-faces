@@ -45,7 +45,7 @@ def get_rules():
 @app.route("/rules/create", methods=['GET'])
 def get_rules_create():
     with open(OBJECT_FILE, 'r') as infile:
-        objects = list(json.loads(infile.read()).keys())
+        objects = json.loads(infile.read())
     return render_template('create_rules.html', objects=objects)
 
 @app.route("/rules/_incoming", methods=['POST'])

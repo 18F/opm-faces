@@ -28,23 +28,40 @@
             <td><input name="name"></td>
           </tr>
           <tr>
-            <th scope="row"><strong>Compare value:</td>
+            <th scope="row"><strong>If:</td>
+              <td>
+                <select name="attribute">
+                  {% for obj in objects %}
+                    {% for attribute in objects[obj] %}
+                      {% if attribute not in ['rules', 'type'] %}
+                        <option value="{{ attribute }}">{{ attribute }}
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <select name="operator">
+                <option value="==">Equals
+                <option value="!=">Does not equal
+                <option value="<">Is less than
+                <option value=">">Is greater than
+                <option value="<=">Is less than or equal to
+                <option value=">=">Is greater than or equal to
+              </select>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Value:</td>
             <td><input name="compare_value"></td>
           </tr>
           <tr>
-            <th scope="row"><strong>Compare attribute:</td>
-            <td><input name="attribute"></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>Operator:</td>
-            <td><input name="operator"></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>If TRUE:</td>
+            <th scope="row"><strong>Return:</td>
             <td><input name="concur"></td>
           </tr>
           <tr>
-            <th scope="row"><strong>If FALSE:</td>
+            <th scope="row"><strong>If not, return:</td>
             <td><input name="not_concur"></td>
           </tr>
         </tbody>
