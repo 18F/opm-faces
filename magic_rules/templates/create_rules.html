@@ -14,6 +14,10 @@
       <table class="usa-table-borderless">
         <tbody>
           <tr>
+            <th scope="row"><strong>Rule name:</td>
+            <td><input name="name"></td>
+          </tr>
+          <tr>
             <th scope="row"><strong>Apply to:</td>
             <td>
               <select name="object">
@@ -24,15 +28,11 @@
             </td>
           </tr>
           <tr>
-            <th scope="row"><strong>Rule name:</td>
-            <td><input name="name"></td>
-          </tr>
-          <tr>
             <th scope="row"><strong>If:</td>
               <td>
                 <select name="attribute">
                   {% for obj in objects %}
-                    {% for attribute in objects[obj] %}
+                    {% for attribute in objects[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
                       {% if attribute not in ['rules', 'type'] %}
                         <option value="{{ attribute }}">{{ attribute }}
                       {% endif %}

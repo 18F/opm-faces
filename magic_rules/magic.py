@@ -37,6 +37,49 @@ def post_prototypes__incoming():
         outfile.write(json.dumps(objects, indent=4))
     return redirect('/')
 
+@app.route("/calculation", methods=['GET'])
+def get_calculation():
+    with open(CALCULATION_FILE) as infile:
+        return make_response(jsonify(infile.read()))
+
+@app.route("/calculation/create", methods=['GET'])
+def get_calculation_create():
+    with open(OBJECT_FILE, 'r') as infile:
+        objects = json.loads(infile.read())
+    return render_template('create_calculation.html', objects=objects)
+
+@app.route('/calculation/_incoming', methods=['POST'])
+def post_cacluation__incoming():
+    data = request.form.to_dict()
+    name = data['name']
+    apply_to = data['object']
+    categories = ['static', 'attribute', 'operator']
+    result = [ [ {'source': cat, 'value': i[1], 'position':i[0].split('_')[2]} \
+            for i in \
+            [ i for i in list(data.items())\
+                if i[0][0:4] == cat[0:4] and i[1] != '' ]
+        ] for cat in categories ]
+    result = {
+        'name': name,
+        'type': 'calc',
+        'data': ''.join([ i['value'] for i in sorted(
+            [ inner for outer in result for inner in outer ],
+            key=lambda x: int(x['position'])) ])
+    }
+    # Save calculation material.
+    with open(CALCULATION_FILE, 'r') as infile:
+        calculations = json.loads(infile.read())
+    calculations[name] = result
+    with open(CALCULATION_FILE, 'w') as outfile:
+        outfile.write(json.dumps(calculations, indent=4))
+    # Add calculation reference to prototype.
+    with open(OBJECT_FILE, 'r') as infile:
+        objects = json.loads(infile.read())
+    objects[apply_to]['rules'].append(name)
+    with open(OBJECT_FILE, 'w') as outfile:
+        outfile.write(json.dumps(objects, indent=4))
+    return redirect('/')
+
 @app.route("/rules", methods=['GET'])
 def get_rules():
     with open(RULES_FILE) as infile:
@@ -54,15 +97,15 @@ def post_rules__incoming():
     apply_to = data['object']
     name = data['name']
     data = {
-        name: [
-            {
+        name: {
+                'name': name,
+                'type': 'logic',
                 "compare_value": data['compare_value'],
                 "attribute": data['attribute'],
                 "concur": data['concur'],
                 "not_concur": data['not_concur'],
                 "operator": data['operator']
-            },
-        ]
+            }
     }
     with open(OBJECT_FILE, 'r') as infile:
         objects = json.loads(infile.read())
@@ -106,6 +149,8 @@ def get_clear():
     with open(DATA_FILE, 'w') as outfile:
         outfile.write(json.dumps([]))
     with open(RULES_FILE, 'w') as outfile:
+        outfile.write(json.dumps({}))
+    with open(CALCULATION_FILE, 'w') as outfile:
         outfile.write(json.dumps({}))
     return redirect('/')
 

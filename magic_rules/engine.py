@@ -3,21 +3,36 @@ import json
 from settings import *
 
 class RulesObject:
-    def constructor(self, rule, value):
-        return 'if "{}" {} "{}":\n\t{} = "{}"\nelse:\n\t{} = "{}"'.format(
-            value,
-            rule['operator'],
-            rule['compare_value'],
-            rule['attribute'],
-            rule['concur'],
-            rule['attribute'],
-            rule['not_concur']
-        )
-
-    def engine(self, rule_set, value):
-        for i in rule_set:
-            exec(self.constructor(i, value))
-            return eval(i['attribute'])
+    def engine(self, material, record):
+        output = [] # List of (attr, value) tuples.
+        for i in material:
+            rule = i[list(i.keys())[0]]
+            if rule['type'] == 'logic':
+                constructed = 'if "{}" {} "{}":\n\tanswer = "{}"\nelse:\n\tanswer = "{}"\n'.format(
+                    record.__dict__[rule['attribute']],
+                    rule['operator'],
+                    rule['compare_value'],
+                    rule['concur'],
+                    rule['not_concur']
+                )
+                exec(constructed)
+                output.append((rule['name'], eval('answer')))
+            elif rule['type'] == 'calc':
+                if rule['data'].index('__') == -1:
+                    eval('record.{} = {}'.format(rule['name'], eval(rule['data'])))
+                else:
+                    eq = rule['data'].split('__')
+                    size = len(eq)
+                    for i in range(size):
+                        try:
+                            value = record.__dict__[eq[i]]
+                            index = eq.index(eq[i])
+                            eq.insert(i, value)
+                            eq.pop(i+1)
+                        except KeyError:
+                            pass
+                output.append((rule['name'], eval(''.join(eq))))
+        return output
 
     def to_json_dict(self, filename, new_data, key):
         with open(filename, 'r') as infile:
@@ -69,19 +84,16 @@ class ObjectInstance(ObjectPrototype):
 
     def load_rules(self):
         with open(RULES_FILE, 'r') as infile:
-            all_rules = json.loads(infile.read())
-            return [ {i: all_rules[i]} for i in self.rules ]
+            rules = json.loads(infile.read())
+        with open(CALCULATION_FILE, 'r') as infile:
+            calculations = json.loads(infile.read())
+        combined = { **rules, **calculations }
+        return [ {i: combined[i]} for i in self.rules ]
 
     def calculate_instance(self):
         rules = self.load_rules()
-        for i in rules:
-            rule_name = list(i.keys())[0]
-            rule_set = i[rule_name]
-            source_attribute = rule_set[0]['attribute']
-            source_value = self.__dict__[source_attribute]
-            target_attribute = rule_name
-            target_value = self.engine(rule_set, source_value)
-            exec('self.{} = "{}"'.format(target_attribute, target_value))
+        for i in self.engine(rules, self):
+            exec('self.{} = "{}"'.format(i[0], i[1]))
 
     def save_record(self):
         with open(DATA_FILE, 'r') as infile:
