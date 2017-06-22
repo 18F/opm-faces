@@ -14,20 +14,35 @@
       <table class="usa-table-borderless">
         <tbody>
           <tr>
-            <th scope="row"><strong>Rule name:</td>
+            <th scope="row"><strong>Calculation name:</td>
             <td><input name="name"></td>
           </tr>
+          <tr><td></td></tr>
+          <tr><td colspan="2"><strong>Implemention method</td></tr>
           <tr>
-            <th scope="row"><strong>Apply to:</td>
+            <th scope="row">By rule (contingent on rule):</th>
+            <td>
+              <select name="contingent">
+                <option value="">
+                <option value="TRUE">Yes
+                <option value="FALSE">No
+              </select>
+            </td>
+          <tr>
+            <td><strong>OR</td>
+          </tr>
+          <tr>
+            <th scope="row">Directly on prototype (always calcuated):</td>
             <td>
               <select name="object">
+                <option value="">
               {% for obj in objects %}
                 <option> {{obj}}
               {% endfor %}
               </select>
             </td>
           </tr>
-
+          <tr><td></td></tr>
           {% for num in range(6) %}
           <tr>
             <th scope="row"><strong>Static value:</td>

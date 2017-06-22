@@ -58,11 +58,21 @@
           </tr>
           <tr>
             <th scope="row"><strong>Return:</td>
-            <td><input name="concur"></td>
+            <td><input name="concur_static"> or
+              <select name="concur_calc">
+              {% for c in calculations %}
+              <option value="_{{ c }}"> {{ c }}
+              {% endfor %}
+            </td>
           </tr>
           <tr>
             <th scope="row"><strong>If not, return:</td>
-            <td><input name="not_concur"></td>
+            <td><input name="not_concur_static"> or
+              <select name="not_concur_calc">
+              {% for c in calculations %}
+              <option value="_{{ c }}"> {{ c }}
+              {% endfor %}
+            </td>
           </tr>
         </tbody>
         <tfoot>

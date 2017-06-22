@@ -46,7 +46,7 @@ def get_calculation():
 def get_calculation_create():
     with open(OBJECT_FILE, 'r') as infile:
         objects = json.loads(infile.read())
-    return render_template('create_calculation.html', objects=objects)
+    return render_template('create_calculations.html', objects=objects)
 
 @app.route('/calculation/_incoming', methods=['POST'])
 def post_cacluation__incoming():
@@ -72,12 +72,13 @@ def post_cacluation__incoming():
     calculations[name] = result
     with open(CALCULATION_FILE, 'w') as outfile:
         outfile.write(json.dumps(calculations, indent=4))
-    # Add calculation reference to prototype.
-    with open(OBJECT_FILE, 'r') as infile:
-        objects = json.loads(infile.read())
-    objects[apply_to]['rules'].append(name)
-    with open(OBJECT_FILE, 'w') as outfile:
-        outfile.write(json.dumps(objects, indent=4))
+    # Conditionally add calculation reference to prototype.
+    if data['contingent'] == 'FALSE':
+        with open(OBJECT_FILE, 'r') as infile:
+            objects = json.loads(infile.read())
+        objects[apply_to]['rules'].append(name)
+        with open(OBJECT_FILE, 'w') as outfile:
+            outfile.write(json.dumps(objects, indent=4))
     return redirect('/')
 
 @app.route("/rules", methods=['GET'])
@@ -89,21 +90,34 @@ def get_rules():
 def get_rules_create():
     with open(OBJECT_FILE, 'r') as infile:
         objects = json.loads(infile.read())
-    return render_template('create_rules.html', objects=objects)
+    with open(CALCULATION_FILE, 'r') as infile:
+        calculations = json.loads(infile.read())
+    return render_template(
+        'create_rules.html',
+        objects=objects,
+        calculations=calculations)
 
 @app.route("/rules/_incoming", methods=['POST'])
 def post_rules__incoming():
     data = request.form.to_dict()
     apply_to = data['object']
     name = data['name']
+    if data['concur_static'] != '':
+        concur = data['concur_static']
+    else:
+        concur = data['concur_calc']
+    if data['not_concur_static'] != '':
+        not_concur = data['not_concur_static']
+    else:
+        not_concur = data['not_concur_calc']
     data = {
         name: {
                 'name': name,
                 'type': 'logic',
                 "compare_value": data['compare_value'],
                 "attribute": data['attribute'],
-                "concur": data['concur'],
-                "not_concur": data['not_concur'],
+                "concur": concur,
+                "not_concur": not_concur,
                 "operator": data['operator']
             }
     }
@@ -142,16 +156,17 @@ def post_data__incoming():
     record.save_record()
     return redirect('/data/view')
 
-@app.route('/clear', methods=['GET'])
-def get_clear():
-    with open(OBJECT_FILE, 'w') as outfile:
-        outfile.write(json.dumps({}))
+@app.route('/clear/rules', methods=['GET'])
+def get_clear_rules():
+    for i in [OBJECT_FILE, RULES_FILE, CALCULATION_FILE]:
+        with open(i, 'w') as outfile:
+            outfile.write(json.dumps({}))
+    return redirect('/')
+
+@app.route('/clear/data', methods=['GET'])
+def get_clear_data():
     with open(DATA_FILE, 'w') as outfile:
         outfile.write(json.dumps([]))
-    with open(RULES_FILE, 'w') as outfile:
-        outfile.write(json.dumps({}))
-    with open(CALCULATION_FILE, 'w') as outfile:
-        outfile.write(json.dumps({}))
     return redirect('/')
 
 if __name__ == '__main__':
