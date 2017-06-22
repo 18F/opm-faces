@@ -1,6 +1,5 @@
-<head>
-  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
-</head>
+{% extends "base.html" %}
+{% block body %}
 <div class="usa-grid" style="margin-top: 5%">
   <h2>
     Rule magic!
@@ -19,3 +18,4 @@
     <a href='/clear/data'>Clear all data</a>
   </div>
 </div>
+{% endblock %}
