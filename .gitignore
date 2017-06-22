@@ -1,1 +1,4 @@
 __pycache__
+*.pyc
+magic_rules/opm-faces/
+magic_rules/node_modules/
