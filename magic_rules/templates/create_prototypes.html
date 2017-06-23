@@ -10,27 +10,14 @@
   </h3>
   <div class="usa-width-one-half">
     <form method="post" action="/prototypes/_incoming" enctype="multipart/form-data">
-      <table class="usa-table-borderless">
-        <tbody>
-          <tr>
-            <th scope="row"><strong>Name:</th>
-            <td><input name="name"></td>
-          </tr>
-          {% for num in range(5) %}
-            <tr>
-              <th scope="row"><strong>Attribute:</th>
-              <td><input name="attribute_{{num}}"></td>
-            </tr>
-          {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2">
-              <button value="submit" type="submit">Submit</button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+      {% for num in range(5) %}
+        <label for="attribute_{{num}}">Attribute:</label>
+        <input type="text" id="attribute_{{num}}" name="attribute_{{num}}">
+      {% endfor %}
+      <a class="usa-button usa-button-outline">Add another attribute</a>
+      <button value="submit" type="submit">Save object</button>
     </form>
   </div>
 </div>
