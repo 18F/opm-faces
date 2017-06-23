@@ -4,34 +4,37 @@ class ObjectCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputs: [{ 'id': 'attribute_1' }]
+      inputs: [{ 'name': 'attribute_1' }]
     }
-    this.addAttribute = this.addAttribute.bind(this);
+    this.handleAddAttribute = this.handleAddAttribute.bind(this);
   }
 
-  addAttribute() {
-    let count = this.state.attrNum + 1;
+  handleAddAttribute(e) {
+    e.preventDefault();
+    let newInputName = `attribute_${this.state.inputs.length}`;
     this.setState({
-      attrNum: count
+      inputs: this.state.inputs.concat([{'name': newInputName}])
     });
-    return(
-      <div>
-      <label htmlFor="attribute_">Attribute:</label>
-      <input type="text" id={`attribute-${this.state.attrNum}`} name={`attribute-${this.state.attrNum}`} />
-      </div>
-    );
   }
 
   render() {
+    console.log(this.state);
     return (
       <form method="post" action="/prototypes/_incoming" encType="multipart/form-data" >
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" name="name" />
-        <div className="attributes">
-          <label htmlFor={`attribute-${this.state.attrNum}`}>Attribute:</label>
-          <input type="text" id={`attribute-${this.state.attrNum}`} name={`attribute-${this.state.attrNum}`} />
-        </div>
-        <a className="usa-button usa-button-outline" onClick={ this.addAttribute }>Add another attribute</a>
+        {this.state.inputs.map(function(input, i) {
+          return(
+          <div className="attribute" key={i}>
+            <label htmlFor={`attribute_${i+1}`}>Attribute:</label>
+            <input
+              type="text"
+              id={`attribute_${i+1}`}
+              name={`attribute_${i+1}`} />
+          </div>
+          )
+        })}
+        <a className="usa-button usa-button-outline" onClick={ this.handleAddAttribute }>Add another attribute</a>
         <button value="submit" type="submit">Save object</button>
       </form>
     );

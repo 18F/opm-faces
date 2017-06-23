@@ -1,7 +1,14 @@
 {
     "Ruler": {
         "type": "Ruler",
+        "Inches": null,
+        "rules": []
+    },
+    "Cat": {
+        "Color": null,
+        "Licks": null,
+        "type": "Cat",
         "rules": [],
-        "Inches": null
+        "Food preference": null
     }
 }
