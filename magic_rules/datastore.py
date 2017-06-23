@@ -25,6 +25,5 @@ class MagicDB:
         self.write(self.data)
 
     def add(self, data):
-        print(data)
         self.data.append(data)
         self.write(self.data)

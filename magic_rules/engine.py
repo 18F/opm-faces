@@ -122,10 +122,9 @@ class Record(MagicObject):
                     pass
         return [rule['name'], eval(''.join(eq)), {}]
 
-    def save(self):
-        db = MagicDB(DATA_FILE)
+    def clean(self):
         output = self.__dict__
         [ output.pop(i) for i in \
             ['rule_material', 'applicable_rules', 'record']
         ]
-        db.add(self.__dict__)
+        return output
