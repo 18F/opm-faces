@@ -1,11 +1,13 @@
 var webpack = require('webpack');
-module.exports = {
+module.exports = [
+  {
+  name: 'rules',
   entry: [
-    "./js/app.js"
+    "./js/rules.js"
   ],
   output: {
     path: __dirname + '/static/js',
-    filename: "bundle.js"
+    filename: "rules.js"
   },
   module: {
     loaders: [
@@ -21,4 +23,28 @@ module.exports = {
   },
   plugins: [
   ]
-};
+}, {
+  name: 'objects',
+  entry: [
+    "./js/objects.js"
+  ],
+  output: {
+    path: __dirname + '/static/js',
+    filename: "objects.js"
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js?$/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react']
+        },
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+  ]
+},
+];

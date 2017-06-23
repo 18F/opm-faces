@@ -1,9 +1,9 @@
 import React from 'react';
 
-var Hello = React.createClass({
+var RulesEditor = React.createClass({
   render() {
-    return <h1>Hello, world</h1>;
+    return <h4>React form</h4>;
   }
 });
 
-export default Hello;
+export default RulesEditor;
