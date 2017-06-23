@@ -8,17 +8,12 @@
   <h3>
       Create object prototype
   </h3>
-  <div class="usa-width-one-half">
-    <form method="post" action="/prototypes/_incoming" enctype="multipart/form-data">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name">
-      {% for num in range(5) %}
-        <label for="attribute_{{num}}">Attribute:</label>
-        <input type="text" id="attribute_{{num}}" name="attribute_{{num}}">
-      {% endfor %}
-      <a class="usa-button usa-button-outline">Add another attribute</a>
-      <button value="submit" type="submit">Save object</button>
-    </form>
+  <div class="usa-width-one-half" id="js-create-object">
+    <div>
+    </div>
   </div>
 </div>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/objects.js') }}"></script>
+{% endblock %}
 {% endblock %}

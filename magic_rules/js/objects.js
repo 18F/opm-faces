@@ -1,5 +1,6 @@
 import RulesEditor from './rules-editor';
+import ObjectCreator from './object-creator';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-ReactDOM.render(<RulesEditor/>, document.getElementById('js-create-rules'));
+ReactDOM.render(<ObjectCreator/>, document.getElementById('js-create-object'));
