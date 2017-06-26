@@ -24,7 +24,7 @@
             <th scope="row"><strong>Apply to:</td>
             <td>
               <select name="object">
-              {% for obj in objects %}
+              {% for obj in prototypes %}
                 <option> {{obj}}
               {% endfor %}
               </select>
@@ -34,8 +34,8 @@
             <th scope="row"><strong>If:</td>
               <td>
                 <select name="attribute">
-                  {% for obj in objects %}
-                    {% for attribute in objects[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+                  {% for obj in prototypes %}
+                    {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
                       {% if attribute not in ['rules', 'type'] %}
                         <option value="{{ attribute }}">{{ attribute }}
                       {% endif %}

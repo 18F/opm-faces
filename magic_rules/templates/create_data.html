@@ -2,23 +2,23 @@
 {% block body %}
 <div class="usa-grid" style="margin-top: 5%">
   <h2>
-  Rule magic!
+    Rule magic!
   </h2>
   <hr>
   <h3>
-  Create some data
+    Create some data
   </h3>
   <div class="usa-width-one-half">
-    {% for obj in objects %}
+    {% for obj in prototypes %}
       <form method="post" action="/data/_incoming" enctype="multipart/form-data">
-        <input name="type" value='{{ objects[obj].type }}' hidden readonly>
+        <input name="type" value='{{ prototypes[obj].type }}' hidden readonly>
         <table class="usa-table-borderless">
           <thead>
             <tr>
               <th colspan="2">{{ obj }}</th>
             </tr>
           </thead>
-          {% for key in objects[obj] %}
+          {% for key in prototypes[obj] %}
             {% if key not in ['rules', 'type'] %}
               <tr>
                 <th scope="row">{{key}}</th>

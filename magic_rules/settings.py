@@ -1,6 +1,6 @@
 import os
 # Where prototype objects are stored.
-OBJECT_FILE = '{}/datastore/objects.json'.format(os.getcwd())
+PROTOTYPE_FILE = '{}/datastore/objects.json'.format(os.getcwd())
 # Where calculated records are stored.
 DATA_FILE = '{}/datastore/data.json'.format(os.getcwd())
 # Where rules are stored.

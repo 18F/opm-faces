@@ -9,7 +9,7 @@
     Create calculations
   </h3>
   <div class="usa-width-one-two-thirds">
-    <form method="post" action="/calculation/_incoming" enctype="multipart/form-data">
+    <form method="post" action="/calculations/_incoming" enctype="multipart/form-data">
       <table class="usa-table-borderless">
         <tbody>
           <tr>
@@ -35,7 +35,7 @@
             <td>
               <select name="object">
                 <option value="">
-              {% for obj in objects %}
+              {% for obj in prototypes %}
                 <option> {{obj}}
               {% endfor %}
               </select>
@@ -50,8 +50,8 @@
             <td>
               <select name="attribute_value_{{ num }}">
                 <option value="">
-                {% for obj in objects %}
-                  {% for attribute in objects[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+                {% for obj in prototypes %}
+                  {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
                     {% if attribute not in ['rules', 'type'] %}
                       <option value="__{{ attribute }}__">{{ attribute }}
                     {% endif %}
