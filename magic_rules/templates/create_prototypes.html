@@ -11,8 +11,9 @@
   <div class="usa-width-one-half" id="js-create-object">
   </div>
 </div>
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/objects.js') }}"></script>
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/objects.js') }}"></script>
 {% endblock %}
-{% endblock %}
+
