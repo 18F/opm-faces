@@ -17,7 +17,7 @@ def api_get_prototypes(action):
         prototypes = MagicDB(PROTOTYPE_FILE).all()
         return make_response(jsonify(prototypes))
     elif action == 'write':
-        data = process_incoming_prototype(request.json)
+        data = process_incoming_prototype(request.get_json())
         return make_response(jsonify(data[1]))
     else:
         return make_response('Not found.')
@@ -28,7 +28,7 @@ def api_get_calculation(action):
         calculations = MagicDB(CALCULATION_FILE).all()
         return make_response(jsonify(calculations))
     elif action == 'write':
-        data = process_incoming_calculation(request.json)
+        data = process_incoming_calculation(request.get_json())
         return make_response(jsonify(data[1]))
     else:
         return make_response('Not found.')
@@ -39,7 +39,7 @@ def api_get_rules(action):
         rules = MagicDB(RULES_FILE).all()
         return make_response(jsonify(rules))
     elif action == 'write':
-        data = process_incoming_rules(request.json)
+        data = process_incoming_rules(request.get_json())
         return make_response(jsonify(data[1]))
     else:
         return make_response('Not found.')
@@ -50,7 +50,7 @@ def api_get_data(action):
         data = MagicDB(DATA_FILE).all()
         return make_response(jsonify(data))
     elif action == 'write':
-        data = process_incoming_data(request.json)
+        data = process_incoming_data(request.get_json())
         return make_response(jsonify(data[1]))
     else:
         return make_response('Not found.')
