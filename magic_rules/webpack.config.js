@@ -46,5 +46,28 @@ module.exports = [
   },
   plugins: [
   ]
-},
+}, {
+  name: 'calculations',
+  entry: [
+    "./js/calculations.js"
+  ],
+  output: {
+    path: __dirname + '/static/js',
+    filename: "calculations.js"
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js?$/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react']
+        },
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+  ]
+}
 ];
