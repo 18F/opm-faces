@@ -15,7 +15,8 @@
     Third, <a href='/data/create'>enter sample data to test rule</a>.<br>
     <br>
     <br>
-    <a href='/clear/rules'>Clear all prototypes, rules, and calculations</a><br>
-    <a href='/clear/data'>Clear all data</a>
+    {% for i in ['prototypes', 'rules', 'calculations', 'data'] %}
+    <a href='/{{ i }}/clear'>Clear all {{ i }}</a><br>
+    {% endfor %}
   </div>
 </div>
