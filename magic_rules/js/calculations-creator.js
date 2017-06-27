@@ -11,7 +11,9 @@ class CalculationsCreator extends React.Component {
       }],
       objects: []
     }
+    this.handleToggleChange = this.handleToggleChange.bind(this);
     this.handleAddOperation = this.handleAddOperation.bind(this);
+    this.renderValueInput = this.renderValueInput.bind(this);
   }
 
   fetchUrl(url) {
@@ -32,12 +34,30 @@ class CalculationsCreator extends React.Component {
       });
   }
 
+  handleToggleChange(event) {
+    console.log(event);
+    //this.setState({ calculations.type: event.target.value });
+  }
+
   handleAddOperation(e){
     e.preventDefault();
     let newInputName = `static_value_${this.state.calculations.length}`;
     this.setState({
       calculations: this.state.calculations.concat([{'name': newInputName}])
     });
+  }
+
+  renderValueInput() {
+  /*return(
+    <div>
+      <label htmlFor={`static_value_${i+1}`}>Value:</label>
+      <input
+        type="text"
+        id={`static_value_${i+1}`}
+        name={`static_value_${i+1}`} />
+    </div>
+  )}*/
+    return null;
   }
 
   render() {
@@ -64,13 +84,7 @@ class CalculationsCreator extends React.Component {
             })}
           </select>
         </fieldset>
-        <div className="value" key="0">
-          <label htmlFor="static_value_0">Value:</label>
-          <input
-            type="text"
-            id="static_value_0"
-            name="static_value_0" />
-        </div>
+
         {this.state.calculations.map((input, i) => {
           return(
             <div className="value" key={i}>
@@ -82,12 +96,27 @@ class CalculationsCreator extends React.Component {
                 <option key={`operator_value_${i+1}-divide`} value="/">/ (divide)</option>
                 <option key={`operator_value_${i+1}-power`} value="^">^ (to power of)</option>
               </select>
+              <fieldset className="radio-toggle" id={i}>
+                <label className="toggle" htmlFor={`value_type_static_${i+1}`}>
+                  <input
+                    name={`value_type_static_${i+1}`}
+                    type="radio"
+                    value="static_value"
+                    checked={this.state.calculations[i].type==='static_value'}
+                    onChange={this.handleToggleChange} />
+                <span>Static value</span>
+                </label>
 
-            <label htmlFor={`static_value_${i+1}`}>Value:</label>
-            <input
-              type="text"
-              id={`static_value_${i+1}`}
-              name={`static_value_${i+1}`} />
+                <label className="toggle" htmlFor={`value_type_object_${i+1}`}>
+                  <input
+                    name={`value_type_object_${i+1}`}
+                    type="radio" value="object_value"
+                    checked={this.state.calculations[i].type==='object_value'}
+                    onChange={this.handleToggleChange} />
+                  <span>Value from object</span>
+                </label>
+              </fieldset>
+
             </div>
           )
         })}
