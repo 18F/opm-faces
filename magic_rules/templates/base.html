@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+ {% block extrahead %}
+ <style type="text/css">
+ .hide {
+  display: none;
+ }
+ .show {
+  display: block;
+ }
+
+ .linktrigger {
+  cursor: pointer;
+  }
+
+ </style>
+ {% endblock %}
+ </head>
+ <body>
+ {% block body %}{% endblock %}
+ <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+   <script src="{{ url_for('static', filename='css/uswds/js/uswds.js') }}"></script>
+  {% block scripts %}
+  {% endblock %}
+ </body>
+ </html>
