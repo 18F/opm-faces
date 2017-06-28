@@ -9,6 +9,21 @@
   <h3>
     Create calculations
   </h3>
+  <p>
+    A calculation is a math-like equation using static values or values derived
+    from the attribute of an instance of a prototype. For example, a calculation
+    named "double_branches" could be set up to multiply the "branches" value
+    of an instance of the previously defined "tree" prototype
+    (e.g. 2 * "branches").
+  </p>
+  <p>
+    A calculation may be permanently associated with a prototype or contingently
+    associated based on a logic within a separately defined rule. A permanently
+    associated calculation will always be executed when a new instance of a
+    prototype is created. A contingently associated calculation will be executed
+    only when triggered by a rule.
+    <br><br>
+  </p>
   <div class="usa-width-one-two-thirds">
     <form method="post" action="/calculations/_incoming" enctype="multipart/form-data">
       <table class="usa-table-borderless">

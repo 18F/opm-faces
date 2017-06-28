@@ -9,6 +9,17 @@
   <h3>
     Create rules
   </h3>
+  <p>
+    A rule is a logical statement that is associated with a prototype. When a
+    new instance of a prototype is created, the rules associated with the
+    prototype are executed.
+  </p>
+  <p>
+    For example, if a "tree" prototype existed with the
+    attribute of "branches", a rule named "is_bare" could be attached to it
+    that checked the number of "branches" on the instance and if there were
+    zero "branches", return a value of "TRUE" for the new attribute "is_bare".
+  </p>
   <div class="usa-width-one-half">
     <form method="post" action="/rules/_incoming" enctype="multipart/form-data">
       <table class="usa-table-borderless">

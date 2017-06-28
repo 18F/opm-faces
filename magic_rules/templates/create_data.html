@@ -9,6 +9,10 @@
   <h3>
     Create some data
   </h3>
+  <p>
+    Enter for the attributes of a prototype to create a new instance. As part of
+    creation, any associated rules and/or calculations will be executed.
+  </p>
   <div class="usa-width-one-half">
     {% for obj in prototypes %}
       <form method="post" action="/data/_incoming" enctype="multipart/form-data">
