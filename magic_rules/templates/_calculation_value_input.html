@@ -1,0 +1,20 @@
+        <div class="usa-width-one-third">
+          <div class="static-input">
+            <label for="static_value_{{num}}">Static value:</label>
+            <input name="static_value_{{ num }}" />
+          </div>
+          <div class="attr-input">
+            <label for="attribute_value_{{num}}">Value from attribute:</label>
+            <select name="attribute_value_{{ num }}">
+              <option value="">
+              {% for obj in prototypes %}
+                {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+                  {% if attribute not in ['rules', 'type'] %}
+                    <option value="__{{ attribute }}__">{{ attribute }}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </select>
+          </div>
+          <a class="linktrigger show_hide_attr_val">Use value attribute</a>
+        </div>
