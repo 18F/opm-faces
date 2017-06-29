@@ -1,29 +1,33 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="usa-grid" style="margin-top: 5%">
-  <div class="usa-width-two-thirds">
-  <h2>
+  <div class="usa-width-one-whole">
+  <h1>
     Rule magic!
-  </h2>
+  </h1>
   <hr>
-  <h3>
+  <h2>
     Create calculations
-  </h3>
-  <p>
-    A calculation is a math-like equation using static values or values derived
-    from the attribute of an instance of a prototype. For example, a calculation
-    named "double_branches" could be set up to multiply the "branches" value
-    of an instance of the previously defined "tree" prototype
-    (e.g. 2 * "branches").
-  </p>
-  <p>
-    A calculation may be permanently associated with a prototype or contingently
-    associated based on a logic within a separately defined rule. A permanently
-    associated calculation will always be executed when a new instance of a
-    prototype is created. A contingently associated calculation will be executed
-    only when triggered by a rule.
-    <br><br>
-  </p>
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">How to create calculations</h3>
+      <p>
+        A calculation is a math-like equation using static values or values derived
+        from the attribute of an instance of a prototype. For example, a calculation
+        named "double_branches" could be set up to multiply the "branches" value
+        of an instance of the previously defined "tree" prototype
+        (e.g. 2 * "branches").
+      </p>
+      <p>
+        A calculation may be permanently associated with a prototype or contingently
+        associated based on a logic within a separately defined rule. A permanently
+        associated calculation will always be executed when a new instance of a
+        prototype is created. A contingently associated calculation will be executed
+        only when triggered by a rule.
+      </p>
+    </div>
+  </div>
     <form method="post" action="/calculations/_incoming" enctype="multipart/form-data">
        <label for="name">Calculation name:</label>
        <input name="name" />

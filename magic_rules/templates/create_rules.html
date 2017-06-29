@@ -1,99 +1,96 @@
-<head>
-  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
-</head>
+{% extends "base.html" %}
+{% block body %}
 <div class="usa-grid" style="margin-top: 5%">
-  <h2>
+  <h1>
     Rule magic!
-  </h2>
+  </h1>
   <hr>
-  <h3>
+  <h2>
     Create rules
-  </h3>
-  <p>
-    A rule is a logical statement that is associated with a prototype. When a
-    new instance of a prototype is created, the rules associated with the
-    prototype are executed.
-  </p>
-  <p>
-    For example, if a "tree" prototype existed with the
-    attribute of "branches", a rule named "is_bare" could be attached to it
-    that checked the number of "branches" on the instance and if there were
-    zero "branches", return a value of "TRUE" for the new attribute "is_bare".
-  </p>
-  <div class="usa-width-one-half">
-    <form method="post" action="/rules/_incoming" enctype="multipart/form-data">
-      <table class="usa-table-borderless">
-        <tbody>
-          <tr>
-            <th scope="row"><strong>Rule name:</td>
-            <td><input name="name"></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>Apply to:</td>
-            <td>
-              <select name="object">
-              {% for obj in prototypes %}
-                <option> {{obj}}
-              {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>If:</td>
-              <td>
-                <select name="attribute">
-                  {% for obj in prototypes %}
-                    {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
-                      {% if attribute not in ['rules', 'type'] %}
-                        <option value="{{ attribute }}">{{ attribute }}
-                      {% endif %}
-                    {% endfor %}
-                  {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <select name="operator">
-                <option value="==">Equals
-                <option value="!=">Does not equal
-                <option value="<">Is less than
-                <option value=">">Is greater than
-                <option value="<=">Is less than or equal to
-                <option value=">=">Is greater than or equal to
-              </select>
-          </tr>
-          <tr>
-            <th scope="row"><strong>Value:</td>
-            <td><input name="compare_value"></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>Return:</td>
-            <td><input name="concur_static"> or
-              <select name="concur_calc">
-              {% for c in calculations %}
-              <option value="_{{ c }}"> {{ c }}
-              {% endfor %}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row"><strong>If not, return:</td>
-            <td><input name="not_concur_static"> or
-              <select name="not_concur_calc">
-              {% for c in calculations %}
-              <option value="_{{ c }}"> {{ c }}
-              {% endfor %}
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th scope="row">
-              <button value="submit" type="submit">Submit</button>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">How to create rules</h3>
+      <p>
+        A rule is a logical statement that is associated with a prototype. When a
+        new instance of a prototype is created, the rules associated with the
+        prototype are executed.
+      </p>
+      <p>
+        For example, if a "tree" prototype existed with the
+        attribute of "branches", a rule named "is_bare" could be attached to it
+        that checked the number of "branches" on the instance and if there were
+        zero "branches", return a value of "TRUE" for the new attribute "is_bare".
+      </p>
+    </div>
+  </div>
+  <form method="post" action="/rules/_incoming" enctype="multipart/form-data">
+    <div class="usa-width-one-whole">
+      <label for="name">Rule name:</label>
+      <input name="name" />
+      <label>Apply to:</label>
+      <select name="object">
+      {% for obj in prototypes %}
+        <option>{{obj}}</option>
+      {% endfor %}
+      </select>
+    </div>
+    <div class="usa-width-one-whole" style="margin-top: 2rem;">
+      <h3>Enter a logical condition</h3>
+    </div>
+  </div>
+  <div class="usa-grid">
+    <div class="conditional usa-width-one-third">
+      <label for="attribute">Attribute to test:</label>
+      <select name="attribute">
+        {% for obj in prototypes %}
+          {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+            {% if attribute not in ['rules', 'type'] %}
+              <option value="{{ attribute }}">{{ attribute }}</option>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="conditional usa-width-one-third">
+      <label for="operator">Comparison operator: </label>
+      <select name="operator">
+        <option value="==">Is equal to</option>
+        <option value="!=">Is not equal to</option>
+        <option value="<">Is less than</option>
+        <option value=">">Is greater than</option>
+        <option value="<=">Is less than or equal to</option>
+        <option value=">=">Is greater than or equal to</option>
+      </select>
+    </div>
+    <div class="conditional usa-width-one-third">
+      <label for="compare_value">Value to test against:</label>
+      <input name="compare_value" />
+    </div>
+  </div>
+  <div class="usa-grid">
+      <label for="concur_static" style="margin-top: 2rem;">If the above condition is met, return:</label>
+      <input type="radio" value="concur_static" /><label>Static value</label>
+      <input type="radio" value="concur_calc" /><label>Calculation</label>
+      <input name="concur_static" />
+      <select name="concur_calc">
+      {% for c in calculations %}
+      <option value="_{{ c }}">{{ c }}</option>
+    {% endfor %}
+    </select>
+
+    <label for="not_concur_static">If the above condition is not met, return:</label>
+    <input type="radio" value="not_concur_static" /><label>Static value</label>
+    <input type="radio" value="not_concur_calc" /><label>Calculation</label>
+
+    <input name="not_concur_static">
+    <select name="not_concur_calc">
+    {% for c in calculations %}
+    <option value="_{{ c }}">{{ c }}</option>
+    {% endfor %}
+    </select>
+    <button value="submit" type="submit">Create rule</button>
     </form>
   </div>
 </div>
+{% endblock %}
