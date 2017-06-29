@@ -69,27 +69,38 @@
     </div>
   </div>
   <div class="usa-grid">
-      <label for="concur_static" style="margin-top: 2rem;">If the above condition is met, return:</label>
-      <input type="radio" value="concur_static" /><label>Static value</label>
-      <input type="radio" value="concur_calc" /><label>Calculation</label>
-      <input name="concur_static" />
-      <select name="concur_calc">
+    <fieldset>
+      <legend style="margin-top: 2rem;">If the above condition is met, return:</legend>
+        <input type="radio" value="concur_static_radio" name="concur" checked />
+        <label for="concur_static_radio">Static value</label>
+        <input style="margin-left: 25px;" name="concur_static" />
+
+        <input type="radio" value="concur_calc_radio" name="concur" />
+        <label for="concur_calc_radio">Calculation</label>
+        <select style="margin-left: 25px;" name="concur_calc">
+        {% for c in calculations %}
+          <option value="_{{ c }}">{{ c }}</option>
+        {% endfor %}
+        </select>
+    </fieldset>
+    <fieldset>
+      <legend>If the above condition is not met, return:</legend>
+      <input type="radio" value="not_concur_static_radio" name="not_concur" checked/>
+      <label for="not_concur_static_radio">Static value</label>
+      <input style="margin-left: 25px;" name="not_concur_static">
+
+      <input type="radio" value="not_concur_calc_radio" name="not_concur"/>
+      <label for="not_concur_calc_radio">Calculation</label>
+      <select style="margin-left: 25px;" name="not_concur_calc">
       {% for c in calculations %}
-      <option value="_{{ c }}">{{ c }}</option>
-    {% endfor %}
-    </select>
+        <option value="_{{ c }}">{{ c }}</option>
+      {% endfor %}
+      </select>
 
-    <label for="not_concur_static">If the above condition is not met, return:</label>
-    <input type="radio" value="not_concur_static" /><label>Static value</label>
-    <input type="radio" value="not_concur_calc" /><label>Calculation</label>
-
-    <input name="not_concur_static">
-    <select name="not_concur_calc">
-    {% for c in calculations %}
-    <option value="_{{ c }}">{{ c }}</option>
-    {% endfor %}
-    </select>
-    <button value="submit" type="submit">Create rule</button>
+    </fieldset>
+    <div class="usa-width-one-whole buttonbar">
+      <button value="submit" type="submit">Create rule</button>
+    </div>
     </form>
   </div>
 </div>

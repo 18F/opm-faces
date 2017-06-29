@@ -57,7 +57,23 @@
       </div>
       <div class="usa-width-one-whole">
       {% for num in range(2) %}
-        {% include "_calculation_value_input.html" %}
+
+        <input type="radio" value="static_value_{{num}}_radio" name="value_{{num}}_radio" checked/>
+        <label for="static_value_{{num}}_radio">Static value:</label>
+        <input style="margin-left: 25px;" name="static_value_{{num}}">
+
+        <input type="radio" value="attribute_value_{{num}}_radio" name="value_{{num}}_radio"/>
+        <label for="attribute_value_{{num}}_radio">Value from attribute:</label>
+        <select  style="margin-left: 25px;" name="attribute_value_{{ num }}">
+          <option value=""></option>
+          {% for obj in prototypes %}
+            {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+              {% if attribute not in ['rules', 'type'] %}
+                <option value="__{{ attribute }}__">{{ attribute }}</option>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
         {% if num == 0 %}
           {% include "_calculation_operator_input.html" %}
         {% endif %}
@@ -65,10 +81,25 @@
       </div>
       {% for num in range(2,6) %}
       <div class="hide usa-width-one-whole">
-        {% include "_calculation_value_input.html" %}
         {% if num != 5 %}
           {% include "_calculation_operator_input.html" %}
         {% endif %}
+        <input type="radio" value="static_value_{{num}}_radio" name="value_{{num}}_radio" checked/>
+        <label for="static_value_{{num}}_radio">Static value:</label>
+        <input style="margin-left: 25px;" name="static_value_{{num}}">
+
+        <input type="radio" value="attribute_value_{{num}}_radio" name="value_{{num}}_radio"/>
+        <label for="attribute_value_{{num}}_radio">Value from attribute:</label>
+        <select  style="margin-left: 25px;" name="attribute_value_{{ num }}">
+          <option value=""></option>
+          {% for obj in prototypes %}
+            {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+              {% if attribute not in ['rules', 'type'] %}
+                <option value="__{{ attribute }}__">{{ attribute }}</option>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
       </div>
       {% endfor %}
       </div>
@@ -83,8 +114,8 @@
 <script>
 var $ = jQuery;
 // hide attribute values by default
-$('[name*="attribute_value"]').hide();
-$('[for*="attribute_value"]').hide();
+/*$('[name*="attribute_value"]').hide();*/
+/*$('[for*="attribute_value"]').hide();*/
 
 //only show either static or attr val
 $('#contingent').on('change', function() {
@@ -104,7 +135,7 @@ $('.show_hide_attr_val').on('click', function(e) {
 var hiddenVals = document.querySelectorAll('.formulae .hide');
 var showCounter = 0;
 $('.show_next_attr').on('click', function(event) {
-  $(hiddenAttrs[showCounter]).show();
+  $(hiddenVals[showCounter]).show();
   showCounter += 1;
 });
 </script>

@@ -14,18 +14,32 @@
  .linktrigger {
   cursor: pointer;
   }
+
   fieldset legend {
-  font-size: 2rem;
-  font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
+    font-size: 2rem;
+    font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
   }
 
   .buttonbar {
     margin-top: 4rem;
+    padding-bottom: 2rem;
   }
 
+  fieldset,
   .conditional label {
-    margin-top: 2rem!important;
+    margin-top: 3rem!important;
   }
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 140px; /* to keep the hidden inputs from overrunning side-by-side radios */
+}
+
+[type="checkbox"]+label,
+[type="radio"]+label {
+    display: inline-block;
+    margin-right: 40px;
+    }
  </style>
  {% endblock %}
  </head>
