@@ -27,12 +27,19 @@ def process_incoming_calculation(data):
             [ i for i in list(data.items())\
                 if i[0][0:4] == cat[0:4] and i[1] != '' ]
         ] for cat in categories ]
+    obj = sorted([ i for i in [ inner for outer in obj for inner in outer ] ],
+        key=lambda x: int(x['position']))
+    # Correctly organize values and operators in a calcuable fashion.
+    values = [ i['value'] for i in obj if i['source'] != 'operator' ]
+    operators = [ i['value'] for i in obj if i['source'] == 'operator' ]
+    ct = 0
+    for i in range(len(operators)):
+        values.insert(i+1+ct, operators[i])
+        ct += 1
     obj = {
         'name': name,
         'type': 'calc',
-        'data': ''.join([ i['value'] for i in sorted(
-            [ inner for outer in obj for inner in outer ],
-            key=lambda x: int(x['position'])) ])
+        'data': ''.join(values)
     }
     # Save calculation material.
     MagicDB(CALCULATION_FILE).update(data=obj, key=name)
