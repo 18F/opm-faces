@@ -1,5 +1,19 @@
 # opm-faces
 
+## Report
+Our final report and recommendations may be found on [18F's Google Drive](https://drive.google.com/open?id=0B8u6AetkKiTUM0RIVEZZbkI2WTQ).
+
+## Magic Rules!
+As part of our engagement, we created a very basic prototype business rules calculator to demonstrate
+a few of the concepts and patterns that were included in our recommendations:
+ - Store rules as data, not as code
+ - Choose a single, consolidated place for calculations to be executed
+ - Loosen up coupling between the calculation engine and any front end components to allow for component switch out
+
+To run Magic Rules, just clone this repository to your local machine navigate to `/magic_rules` and execute
+`magic.py`. The various data types ("prototypes", "calculations", and "rules") are written to `/magic_rules/datastore`
+when created via the web interface. Magic Rules also has a simple read/write API that is documented in `/api/`.
+
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) for additional information.
