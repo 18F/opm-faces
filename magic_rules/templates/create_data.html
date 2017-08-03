@@ -1,14 +1,21 @@
-<head>
-  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
-</head>
+{% extends "base.html" %}
+{% block body %}
 <div class="usa-grid" style="margin-top: 5%">
-  <h2>
+  <h1>
     Rule magic!
-  </h2>
+  </h1>
   <hr>
-  <h3>
+  <h2>
     Create some data
-  </h3>
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">What data entry does</h3>
+      <p>
+        Enter specific values for the attributes of a prototype to create a new instance of that prototype. As part of creation, any associated rules and/or calculations will be executed.
+      </p>
+    </div>
+  </div>
   <div class="usa-width-one-half">
     {% for obj in prototypes %}
       <form method="post" action="/data/_incoming" enctype="multipart/form-data">
@@ -30,7 +37,7 @@
           <tfoot>
             <tr>
               <td colspan="2">
-                <button value="submit" type="submit">Submit</button>
+                <button value="submit" type="submit">Save data and apply rules</button>
               </td>
             </tr>
           </tfoot>
@@ -39,3 +46,4 @@
     {% endfor %}
   </div>
 </div>
+{% endblock %}

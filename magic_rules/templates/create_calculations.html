@@ -1,96 +1,142 @@
-<head>
-  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
-</head>
+{% extends "base.html" %}
+{% block body %}
 <div class="usa-grid" style="margin-top: 5%">
-  <h2>
+  <div class="usa-width-one-whole">
+  <h1>
     Rule magic!
-  </h2>
+  </h1>
   <hr>
-  <h3>
+  <h2>
     Create calculations
-  </h3>
-  <div class="usa-width-one-two-thirds">
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">How to create calculations</h3>
+      <p>
+        A calculation is a math-like equation using static values or values derived
+        from the attribute of an instance of a prototype. For example, a calculation
+        named "double_branches" could be set up to multiply the "branches" value
+        of an instance of the previously defined "tree" prototype
+        (e.g. 2 * "branches").
+      </p>
+      <p>
+        A calculation may be permanently associated with a prototype or contingently
+        associated based on a logic within a separately defined rule. A permanently
+        associated calculation will always be executed when a new instance of a
+        prototype is created. A contingently associated calculation will be executed
+        only when triggered by a rule.
+      </p>
+    </div>
+  </div>
     <form method="post" action="/calculations/_incoming" enctype="multipart/form-data">
-      <table class="usa-table-borderless">
-        <tbody>
-          <tr>
-            <th scope="row"><strong>Calculation name:</td>
-            <td><input name="name"></td>
-          </tr>
-          <tr><td></td></tr>
-          <tr><td colspan="2"><strong>Implemention method</td></tr>
-          <tr>
-            <th scope="row">By rule (contingent on rule):</th>
-            <td>
-              <select name="contingent">
-                <option value="">
-                <option value="TRUE">Yes
-                <option value="FALSE">No
-              </select>
-            </td>
-          <tr>
-            <td><strong>OR</td>
-          </tr>
-          <tr>
-            <th scope="row">Directly on prototype (always calcuated):</td>
-            <td>
-              <select name="object">
-                <option value="">
-              {% for obj in prototypes %}
-                <option> {{obj}}
-              {% endfor %}
-              </select>
-            </td>
-          </tr>
-          <tr><td></td></tr>
-          {% for num in range(6) %}
-          <tr>
-            <th scope="row"><strong>Static value:</td>
-            <td><input name="static_value_{{ num }}"></td>
-            <td><strong>or value from attribute:</td>
-            <td>
-              <select name="attribute_value_{{ num }}">
-                <option value="">
-                {% for obj in prototypes %}
-                  {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
-                    {% if attribute not in ['rules', 'type'] %}
-                      <option value="__{{ attribute }}__">{{ attribute }}
-                    {% endif %}
-                  {% endfor %}
-                {% endfor %}
-              </select>
-            </td>
-          </tr>
-          {% if num != 5 %}
-          <tr>
-            <th scope="row"><strong>Operator:</th>
-            <td>
-              <select name="operator_value_{{ num }}">
-                <option value="">
-                <option value="+">+ (plus)
-                <option value="-">- (minus)
-                <option value="*">* (multiply)
-                <option value="/">/ (divide)
-                <option value="^">^ (to power of)
-              </select>
-            </td>
-          </tr>
-          {% endif %}
-            {% endfor %}
-            <tr>
-              <td>
+       <label for="name">Calculation name:</label>
+       <input name="name" />
+       <fieldset style="margin-top: 2rem;">
+        <legend>Implementation method</legend>
 
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th scope="row">
-              <button value="submit" type="submit">Submit</button>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
+        <label for="contingent">Triggered by rule (contingent on rule):</label>
+        <select id="contingent" name="contingent">
+          <option value="FALSE">No</option>
+          <option value="TRUE">Yes</option>
+        </select>
+
+        <div class="use_prototype">
+          <label for="object">Using prototype attribute (always calculated):</label>
+          <select name="object">
+            <option value="">
+          {% for obj in prototypes %}
+            <option> {{obj}}
+          {% endfor %}
+          </select>
+        </div>
+      </fieldset>
+    </div>
+    <div class="formulae">
+      <div class="usa-width-one-whole">
+        <h3 style="margin-top: 2rem;">Enter operations</h3>
+      </div>
+      <div class="usa-width-one-whole">
+      {% for num in range(2) %}
+
+        <input type="radio" value="static_value_{{num}}_radio" name="value_{{num}}_radio" checked/>
+        <label for="static_value_{{num}}_radio">Static value:</label>
+        <input style="margin-left: 25px;" name="static_value_{{num}}">
+
+        <input type="radio" value="attribute_value_{{num}}_radio" name="value_{{num}}_radio"/>
+        <label for="attribute_value_{{num}}_radio">Value from attribute:</label>
+        <select  style="margin-left: 25px;" name="attribute_value_{{ num }}">
+          <option value=""></option>
+          {% for obj in prototypes %}
+            {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+              {% if attribute not in ['rules', 'type'] %}
+                <option value="__{{ attribute }}__">{{ attribute }}</option>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
+        {% if num == 0 %}
+          {% include "_calculation_operator_input.html" %}
+        {% endif %}
+      {% endfor %}
+      </div>
+      {% for num in range(2,6) %}
+      <div class="hide usa-width-one-whole">
+        {% if num != 5 %}
+          {% include "_calculation_operator_input.html" %}
+        {% endif %}
+        <input type="radio" value="static_value_{{num}}_radio" name="value_{{num}}_radio" checked/>
+        <label for="static_value_{{num}}_radio">Static value:</label>
+        <input style="margin-left: 25px;" name="static_value_{{num}}">
+
+        <input type="radio" value="attribute_value_{{num}}_radio" name="value_{{num}}_radio"/>
+        <label for="attribute_value_{{num}}_radio">Value from attribute:</label>
+        <select  style="margin-left: 25px;" name="attribute_value_{{ num }}">
+          <option value=""></option>
+          {% for obj in prototypes %}
+            {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+              {% if attribute not in ['rules', 'type'] %}
+                <option value="__{{ attribute }}__">{{ attribute }}</option>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+      </div>
+      <div class="usa-width-one-whole buttonbar">
+      <a class="usa-button usa-button-outline show_next_attr linktrigger">Add another operation</a>
+      <button value="submit" type="submit">Create calculation</button>
+      </div>
     </form>
   </div>
-</div>
+{% endblock %}
+{% block scripts %}
+<script>
+var $ = jQuery;
+// hide attribute values by default
+/*$('[name*="attribute_value"]').hide();*/
+/*$('[for*="attribute_value"]').hide();*/
+
+//only show either static or attr val
+$('#contingent').on('change', function() {
+  if (this.value == "FALSE") {
+    $('.use_prototype').slideDown();
+  } else {
+    $('.use_prototype').slideUp();
+  }
+});
+
+$('.show_hide_attr_val').on('click', function(e) {
+  console.log(this);
+  this.parentElement.getElementsByClassName('attr-input').toggle();
+  this.parentElement.getElementsByClassName('static-input').toggle();
+});
+
+var hiddenVals = document.querySelectorAll('.formulae .hide');
+var showCounter = 0;
+$('.show_next_attr').on('click', function(event) {
+  $(hiddenVals[showCounter]).show();
+  showCounter += 1;
+});
+</script>
+{% endblock %}

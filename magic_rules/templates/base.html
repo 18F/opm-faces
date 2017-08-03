@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+ {% block extrahead %}
+ <style type="text/css">
+ .hide {
+  display: none;
+ }
+ .show {
+  display: block;
+ }
+
+ .linktrigger {
+  cursor: pointer;
+  }
+
+  fieldset legend {
+    font-size: 2rem;
+    font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
+  }
+
+  .buttonbar {
+    margin-top: 4rem;
+    padding-bottom: 2rem;
+  }
+
+  fieldset,
+  .conditional label {
+    margin-top: 3rem!important;
+  }
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 140px; /* to keep the hidden inputs from overrunning side-by-side radios */
+}
+
+[type="checkbox"]+label,
+[type="radio"]+label {
+    display: inline-block;
+    margin-right: 40px;
+    }
+ </style>
+ {% endblock %}
+ </head>
+ <body>
+ {% block body %}{% endblock %}
+ <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+   <script src="{{ url_for('static', filename='css/uswds/js/uswds.js') }}"></script>
+  {% block scripts %}
+  {% endblock %}
+ </body>
+ </html>
