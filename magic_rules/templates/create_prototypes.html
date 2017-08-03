@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="usa-grid" style="margin-top: 5%">
+  <h1>
+    Rule magic!
+  </h1>
+  <hr>
+  <h2>
+      Create a prototype
+  </h2>
+<div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">What is a prototype?</h3>
+      <p>
+        A prototype is a representative model for an object or thing you
+        would like to apply a rule and/or calculation to. For example, if you
+        were creating business rules around a forest, you could create a prototype
+        called "tree" with the attributes "branch_count" and "leaves_per_branch" to
+        represent a hypothetical tree in the forest. When you create an instance of
+        the "tree" prototype, you would fill in values for its "branch_count" and
+        "leaves_per_branch" attributes.
+      </p><p>
+        A prototype can have unlimited attributes.
+      </p>
+    </div>
+  </div>
+  <div class="usa-width-one-half">
+    <form method="post" action="/prototypes/_incoming" enctype="multipart/form-data">
+      <label for="name">Name:</label>
+      <input name="name" />
+      <div class="attributes">
+        <label for="attribute_0">Attribute name:</label>
+        <input name="attribute_0" />
+        {% for num in range(1,5) %}
+        <div class="hide">
+          <label for="attribute_{{num}}">Attribute name:</label>
+          <input name="attribute_{{num}}" />
+        </div>
+        {% endfor %}
+      </div>
+      <a class="usa-button usa-button-outline show_next_attr linktrigger">Add another attribute</a>
+      <button value="submit" type="submit">Create this object</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+var $ = jQuery;
+var hiddenAttrs = document.querySelectorAll('.attributes .hide');
+var showCounter = 0;
+$('.show_next_attr').on('click', function(event) {
+  $(hiddenAttrs[showCounter]).show();
+  showCounter += 1;
+});
+</script>
+{% endblock %}
