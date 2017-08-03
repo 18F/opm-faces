@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="usa-grid" style="margin-top: 5%">
+  <h1>
+    Rule magic!
+  </h1>
+  <hr>
+  <h2>
+    Create some data
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">What data entry does</h3>
+      <p>
+        Enter specific values for the attributes of a prototype to create a new instance of that prototype. As part of creation, any associated rules and/or calculations will be executed.
+      </p>
+    </div>
+  </div>
+  <div class="usa-width-one-half">
+    {% for obj in prototypes %}
+      <form method="post" action="/data/_incoming" enctype="multipart/form-data">
+        <input name="type" value='{{ prototypes[obj].type }}' hidden readonly>
+        <table class="usa-table-borderless">
+          <thead>
+            <tr>
+              <th colspan="2">{{ obj }}</th>
+            </tr>
+          </thead>
+          {% for key in prototypes[obj] %}
+            {% if key not in ['rules', 'type'] %}
+              <tr>
+                <th scope="row">{{key}}</th>
+                <td><input name="{{key}}"></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          <tfoot>
+            <tr>
+              <td colspan="2">
+                <button value="submit" type="submit">Save data and apply rules</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

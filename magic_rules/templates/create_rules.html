@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="usa-grid" style="margin-top: 5%">
+  <h1>
+    Rule magic!
+  </h1>
+  <hr>
+  <h2>
+    Create rules
+  </h2>
+  <div class="usa-alert usa-alert-info">
+    <div class="usa-alert-body">
+      <h3 class="usa-alert-heading">How to create rules</h3>
+      <p>
+        A rule is a logical statement that is associated with a prototype. When a
+        new instance of a prototype is created, the rules associated with the
+        prototype are executed.
+      </p>
+      <p>
+        For example, if a "tree" prototype existed with the
+        attribute of "branches", a rule named "is_bare" could be attached to it
+        that checked the number of "branches" on the instance and if there were
+        zero "branches", return a value of "TRUE" for the new attribute "is_bare".
+      </p>
+    </div>
+  </div>
+  <form method="post" action="/rules/_incoming" enctype="multipart/form-data">
+    <div class="usa-width-one-whole">
+      <label for="name">Rule name:</label>
+      <input name="name" />
+      <label>Apply to:</label>
+      <select name="object">
+      {% for obj in prototypes %}
+        <option>{{obj}}</option>
+      {% endfor %}
+      </select>
+    </div>
+    <div class="usa-width-one-whole" style="margin-top: 2rem;">
+      <h3>Enter a logical condition</h3>
+    </div>
+  </div>
+  <div class="usa-grid">
+    <div class="conditional usa-width-one-third">
+      <label for="attribute">Attribute to test:</label>
+      <select name="attribute">
+        {% for obj in prototypes %}
+          {% for attribute in prototypes[obj] %} <!-- Need to limit this to just attributes on the obj selected -->
+            {% if attribute not in ['rules', 'type'] %}
+              <option value="{{ attribute }}">{{ attribute }}</option>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="conditional usa-width-one-third">
+      <label for="operator">Comparison operator: </label>
+      <select name="operator">
+        <option value="==">Is equal to</option>
+        <option value="!=">Is not equal to</option>
+        <option value="<">Is less than</option>
+        <option value=">">Is greater than</option>
+        <option value="<=">Is less than or equal to</option>
+        <option value=">=">Is greater than or equal to</option>
+      </select>
+    </div>
+    <div class="conditional usa-width-one-third">
+      <label for="compare_value">Value to test against:</label>
+      <input name="compare_value" />
+    </div>
+  </div>
+  <div class="usa-grid">
+    <fieldset>
+      <legend style="margin-top: 2rem;">If the above condition is met, return:</legend>
+        <input type="radio" value="concur_static_radio" name="concur" checked />
+        <label for="concur_static_radio">Static value</label>
+        <input style="margin-left: 25px;" name="concur_static" />
+
+        <input type="radio" value="concur_calc_radio" name="concur" />
+        <label for="concur_calc_radio">Calculation</label>
+        <select style="margin-left: 25px;" name="concur_calc">
+        {% for c in calculations %}
+          <option value="_{{ c }}">{{ c }}</option>
+        {% endfor %}
+        </select>
+    </fieldset>
+    <fieldset>
+      <legend>If the above condition is not met, return:</legend>
+      <input type="radio" value="not_concur_static_radio" name="not_concur" checked/>
+      <label for="not_concur_static_radio">Static value</label>
+      <input style="margin-left: 25px;" name="not_concur_static">
+
+      <input type="radio" value="not_concur_calc_radio" name="not_concur"/>
+      <label for="not_concur_calc_radio">Calculation</label>
+      <select style="margin-left: 25px;" name="not_concur_calc">
+      {% for c in calculations %}
+        <option value="_{{ c }}">{{ c }}</option>
+      {% endfor %}
+      </select>
+
+    </fieldset>
+    <div class="usa-width-one-whole buttonbar">
+      <button value="submit" type="submit">Create rule</button>
+    </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

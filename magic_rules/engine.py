@@ -1,113 +1,130 @@
 #! /usr/bin/env python3
 import json
+import datetime as dt
 from settings import *
+from datastore import *
 
-class RulesObject:
-    def constructor(self, rule, value):
-        return 'if "{}" {} "{}":\n\t{} = "{}"\nelse:\n\t{} = "{}"'.format(
-            value,
-            rule['operator'],
-            rule['compare_value'],
-            rule['attribute'],
-            rule['concur'],
-            rule['attribute'],
-            rule['not_concur']
-        )
+class MagicObject:
+    # Some methods.
+    def is_number(self, string):
+        if type(string) != type(str()):
+            return string
+        try:
+            return float(string)
+        except ValueError or TypeError:
+            return '"{}"'.format(string)
 
-    def engine(self, rule_set, value):
-        for i in rule_set:
-            exec(self.constructor(i, value))
-            return eval(i['attribute'])
+    def is_date(self, string):
+        if type(string) != type(str()):
+            return string
+        try:
+            return dt.datetime.strptime(string, '%Y-%m-%d')
+        except ValueError or TypeError:
+            return '"{}"'.format(string)
 
-    def to_json_dict(self, filename, new_data, key):
-        with open(filename, 'r') as infile:
-            data = json.loads(infile.read())
-        data[key] = new_data
-        with open(OBJECT_FILE, 'w') as outfile:
-            outfile.write(json.dumps(data))
+    def specific_type(self, string):
+        a = self.is_date(string)
+        b = self.is_number(string)
+        if type(a) != type(string):
+            return a
+        else:
+            return b
 
-class ObjectPrototype(RulesObject):
-    def __init__(self, obj):
-        for key in obj['attributes']:
-            exec('self.{} = None'.format(key))
-        self.type = obj['type']
-        self.rules = obj['rules']
+class Record(MagicObject):
+    def __init__(self, record):
+        self.record = record
+        self.type = self.record['type']
+        self.rule_material = self.load_rules()
 
-    def save_prototype(self):
-        self.to_json_dict(OBJECT_FILE, self.__dict__, self.type)
-
-class ObjectInstance(ObjectPrototype):
-    def __init__(self, data):
-        self.raw_data = data
-        self.create_instance()
-
-    def load_prototypes(self):
-        with open(OBJECT_FILE, 'r') as infile:
-            return json.loads(infile.read())
-
-    def create_instance(self):
-        prototype = self.load_prototypes()[self.raw_data['type']]
+        # Fetch  correct prototype and add attributes to this Record instance.
+        prototype = MagicDB(PROTOTYPE_FILE).all()[self.type]
         for k in prototype:
             if type(prototype[k]) == type(str()):
                 exec('self.{} = "{}"'.format(k, prototype[k]))
             else:
                 exec('self.{} = {}'.format(k, prototype[k]))
 
-    def populate_instance(self):
-        for k in self.raw_data:
+        # Use incoming data to populate applicable attributes.
+        for k in self.record:
             if k in list(self.__dict__.keys()):
-                exec('self.{} = "{}"'.format(k, self.raw_data[k]))
+                exec('self.{} = "{}"'.format(k, self.record[k]))
 
     def load_rules(self):
-        with open(RULES_FILE, 'r') as infile:
-            all_rules = json.loads(infile.read())
-            return [ {i: all_rules[i]} for i in self.rules ]
+        # Figure out what rules are applicable.
+        db = MagicDB(PROTOTYPE_FILE)
+        prototype = db.single(self.record['type'])
+        self.applicable_rules = prototype['rules']
+
+        # Fetch combined set of all rules and calculations.
+        rules = MagicDB(RULES_FILE).all()
+        calculations = MagicDB(CALCULATION_FILE).all()
+        combined = { **rules, **calculations }
+
+        # Return only applicable rule and calculation material.
+        return [ {i: combined[i]} for i in self.applicable_rules ]
 
     def calculate_instance(self):
-        rules = self.load_rules()
-        for i in rules:
-            rule_name = list(i.keys())[0]
-            rule_set = i[rule_name]
-            source_attribute = rule_set[0]['attribute']
-            source_value = self.__dict__[source_attribute]
-            target_attribute = rule_name
-            target_value = self.engine(rule_set, source_value)
-            exec('self.{} = "{}"'.format(target_attribute, target_value))
+        # Supply engine with all rule and calc material. For each item
+        # of the result, conditionally set attribute of this Record instance.
+        output = [] # List of [attr, value, addl_calcs] results.
+        this_material = self.rule_material
+        for i in this_material:
+            rule = i[list(i.keys())[0]] # Assumes a rule is {rule_name: {rule_material}}
+            if rule['type'] == 'logic':
+                result = self.run_logic(rule)
+                if result[2]:
+                    this_material.append(result[2])
+                output.append(result)
+            elif rule['type'] == 'calc':
+                output.append(self.run_calc(rule))
+        for i in output:
+            if i[1] == '' or str(i[1])[0] != '_':
+                exec('self.{} = "{}"'.format(i[0], i[1]))
+            else:
+                exec('self.{} = "{}"'.format(i[0], '[executed calc]'))
 
-    def save_record(self):
-        with open(DATA_FILE, 'r') as infile:
-            data = json.loads(infile.read())
-        out_data = self.__dict__
-        out_data.pop('raw_data')
-        out_data['type'] = self.type
-        data.append(out_data)
-        with open(DATA_FILE, 'w') as outfile:
-            outfile.write(json.dumps(data))
+    def run_logic(self, rule):
+        v1 = self.specific_type(self.__dict__[rule['attribute']])
+        v2 = self.specific_type(rule['compare_value'])
+        constructed = 'if {} {} {}:'\
+            '\n\tanswer = "{}"\nelse:\n\tanswer = "{}"\n'.format(
+                'v1',
+                rule['operator'],
+                'v2',
+                rule['concur'],
+                rule['not_concur'])
+        exec(constructed)
+        item = [rule['name'], eval('answer'), {}]
+        # Check if result requires an additional calculation.
+        if item[1] != '':
+            if str(item[1])[0] == '_':
+                calc_name = item[1][1:]
+                # Get additional calc material.
+                calc = MagicDB(CALCULATION_FILE).all()[calc_name]
+                calc['name'] = rule['name']
+                # Add to output for subsequent execution.
+                item = (item[0], item[1], {calc_name: calc})
+        return item
 
-def run():
-    # Hypothetical web form data to create a new object prototype.
-    OBJECT_DATA = {
-        'type': 'service_history',
-        'attributes': [ # Base attributes, does not include calc'd attributes.
-            'start_date',
-            'end_date',
-            'ret_type',
-        ],
-        'rules': ['ret_type_name'] # Rule sets that are available to this obj.
-    }
-    # Hypothetical web form data to create instance from existing obj prototype.
-    INSTANCE_DATA = {
-        'type': 'service_history',
-        'start_date': '2014-12-01',
-        'end_date': '2015-01-01',
-        'ret_type': '1'
-    }
-    ServiceHistory = ObjectPrototype(OBJECT_DATA) # Create prototype custom obj.
-    ServiceHistory.save_prototype() # Save prototype to objects.json.
-    TestInstance = ObjectInstance(INSTANCE_DATA) # Create new object instance.
-    TestInstance.populate_instance() # Populate with supplied data.
-    TestInstance.calculate_instance() # Calculate fields based on rules.
-    TestInstance.save_record() # Save record to data.json.
-    return TestInstance.__dict__
+    def run_calc(self, rule):
+        if rule['data'].index('__') == -1:
+            eval('self.record.{} = {}'.format(rule['name'], eval(rule['data'])))
+        else:
+            eq = rule['data'].split('__')
+            size = len(eq)
+            for i in range(size):
+                try:
+                    value = self.__dict__[eq[i]]
+                    index = eq.index(eq[i])
+                    eq.insert(i, value)
+                    eq.pop(i+1)
+                except KeyError:
+                    pass
+        return [rule['name'], eval(''.join(eq)), {}]
 
-print(run())
+    def clean(self):
+        output = self.__dict__
+        [ output.pop(i) for i in \
+            ['rule_material', 'applicable_rules', 'record']
+        ]
+        return output

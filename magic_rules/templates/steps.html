@@ -1,0 +1,22 @@
+<head>
+  <link id="stylesheet" rel="stylesheet" href="{{ url_for('static', filename='css/uswds/css/uswds.min.css') }}">
+</head>
+<div class="usa-grid" style="margin-top: 5%">
+  <h2>
+    Rule magic!
+  </h2>
+  <hr>
+  <div class="usa-width-one-two-thirds">
+    First, <a href='/prototypes/create'>create an object prototype</a>.<br><br>
+    Second, create some
+    <a href='/calculations/create'>calculations for new object prototype</a>
+    and
+    <a href='/rules/create'>rules for your new object prototype</a>.<br><br>
+    Third, <a href='/data/create'>enter sample data to test rule</a>.<br>
+    <br>
+    <br>
+    {% for i in ['prototypes', 'rules', 'calculations', 'data'] %}
+    <a href='/{{ i }}/clear'>Clear all {{ i }}</a><br>
+    {% endfor %}
+  </div>
+</div>
